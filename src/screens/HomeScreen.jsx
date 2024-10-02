@@ -1,69 +1,58 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-  // Predefined checklist (SystemCheckList) with Unicode flags
-  const systemChecklist = [
-    { id: '1', title: 'Moving to New Zealand with School Invitation', flag: '🇳🇿', roadmap: 'School > Visa > Relocation' },
-    { id: '2', title: 'Moving to New Zealand with Job Offer', flag: '🇳🇿', roadmap: 'Job > Visa > PR' },
-    { id: '3', title: 'Visiting New Zealand with Tourist Visa', flag: '🇳🇿', roadmap: 'Visit > Visa > Explore' },
-    { id: '4', title: 'Moving to Singapore with Job Offer', flag: '🇸🇬', roadmap: 'Job > Visa > PR' },
-    { id: '5', title: 'Visiting Singapore to Find a Job', flag: '🇸🇬', roadmap: 'Visit > Visa > Job' },
-  ];
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
-  // My checklist (user created)
-  const myChecklist = [
-    { id: '1', title: 'My Relocation Plan for Singapore 2024', flag: '🇸🇬', roadmap: 'Visa > Housing > Job' },
-    { id: '2', title: 'My Journey to New Zealand 2024', flag: '🇳🇿', roadmap: 'School > Visa > Relocation' },
-  ];
+  // Animation for rotating the earth symbol
+  useEffect(() => {
+    const rotate = Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 3000, // Duration for the full rotation
+        useNativeDriver: true,
+      })
+    );
+    rotate.start();
+    return () => rotate.stop(); // Stop animation on unmount
+  }, [rotateAnim]);
 
-  const handlePress = (item) => {
-    navigation.navigate('CheckListDetails', { item });
-  };
+  const rotateInterpolate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        {/* System Checklist */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Predefined Checklists</Text>
-          {systemChecklist.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.checklistItem} onPress={() => handlePress(item)}>
-              <View style={styles.itemHeader}>
-                <Text style={styles.flag}>{item.flag}</Text>
-                <Text style={styles.checklistText}>{item.title}</Text>
-              </View>
-              <Text style={styles.roadmapText}>{item.roadmap}</Text>
-            </TouchableOpacity>
-          ))}
+      {/* Header */}
+      <Text style={styles.header}>ရွှေခရီး</Text>
+
+      {/* Rotating Earth Symbol */}
+      <Animated.Text style={{ fontSize: 80, transform: [{ rotate: rotateInterpolate }] }}>
+        🌍
+      </Animated.Text>
+
+      {/* System Checklist */}
+      <View style={styles.section}>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('WhereToGo')}>
+            <Text style={styles.buttonText}>🌍 ဘယ်သွားမလဲ (WhereToGo)</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PathwayPlan')}>
+            <Text style={styles.buttonText}>🛤️ ဘယ်လိုသွားမလဲ (Pathways Plan)</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* My Checklist */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Custom Checklists</Text>
-          {myChecklist.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.checklistItem} onPress={() => handlePress(item)}>
-              <View style={styles.itemHeader}>
-                <Text style={styles.flag}>{item.flag}</Text>
-                <Text style={styles.checklistText}>{item.title}</Text>
-              </View>
-              <Text style={styles.roadmapText}>{item.roadmap}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('FAQ')}>
+            <Text style={styles.buttonText}>❓ အမေးအဖြေ (FAQ)</Text>
+          </TouchableOpacity>
 
-      {/* Bottom Menu */}
-      <View style={styles.bottomMenu}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Search')}>
-          <Text style={styles.menuText}>🔍 Search</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Create')}>
-          <Text style={styles.menuText}>➕ Create Checklist</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Settings')}>
-          <Text style={styles.menuText}>⚙️ Settings</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Search')}>
+            <Text style={styles.buttonText}>🔍 ရှာမယ် (Search)</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -72,62 +61,41 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
     padding: 20,
     backgroundColor: '#f0f4f7',
   },
   section: {
     marginBottom: 20,
+    width: '100%', // Ensures it takes the full width
+    alignItems: 'center', // Center items in the section
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 15,
+  header: {
+    color: '#FFD700', // Gold color for better visibility
+    fontSize: 50,
+    fontWeight: 'bold', // Make header text bold
+    textAlign: 'center', // Center text
+    marginBottom: 20, // Space below the header
   },
-  checklistItem: {
-    backgroundColor: '#fff',
-    padding: 15,
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Space between buttons
+    width: '100%', // Full width for the row
+    marginBottom: 15, // Space between rows
+  },
+  button: {
+    flex: 1, // Allow buttons to grow equally
+    backgroundColor: '#007bff', // Blue color
     borderRadius: 10,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    flexDirection: 'column',
-  },
-  itemHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  flag: {
-    fontSize: 24,
-    marginRight: 10,
-  },
-  checklistText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#333',
-  },
-  roadmapText: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 5,
-  },
-  bottomMenu: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff',
-    paddingVertical: 15,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-  },
-  menuItem: {
+    paddingVertical: 20, // Increase vertical padding for larger buttons
+    marginHorizontal: 10, // Space between buttons
     alignItems: 'center',
   },
-  menuText: {
+  buttonText: {
+    color: '#fff',
     fontSize: 16,
-    color: '#007AFF',
+    textAlign: 'center', // Center text in buttons
   },
 });
 

@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text, TouchableOpacity } from 'react-native';
 import HomeScreen from './src/screens/HomeScreen';
-import CheckListDetailsScreen from './src/screens/CheckListDetailsScreen';
+import PathwayPlanScreen from './src/screens/PathwayPlanScreen';
+import EditCheckListScreen from './src/screens/EditCheckListScreen';
 
 
 const Stack = createStackNavigator();
@@ -60,8 +61,19 @@ const App = () => {
               })} 
             />
             <Stack.Screen 
-              name="CheckListDetails" 
-              component={CheckListDetailsScreen} 
+              name="PathwayPlan" 
+              component={PathwayPlanScreen} 
+              options={({ navigation, route }) => ({ 
+                title: 'Home',
+                headerLeft: () => <HeaderLeft navigation={navigation} />,
+                headerTitle: () => <HeaderTitle route={route} />,
+                headerRight: () => <HeaderRight />,
+                headerTitleAlign: 'center',
+              })} 
+            />     
+            <Stack.Screen 
+              name="EditCheckList" 
+              component={EditCheckListScreen} 
               options={({ navigation, route }) => ({ 
                 title: 'Home',
                 headerLeft: () => <HeaderLeft navigation={navigation} />,
