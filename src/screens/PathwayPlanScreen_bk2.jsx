@@ -1,139 +1,56 @@
-// import React, { useState } from 'react';
-// import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+// import React from 'react';
+// import { View, Text, StyleSheet, SectionList, TouchableOpacity } from 'react-native';
 
-// const PathwayPlanScreen = ({ navigation }) => {
-//   // System-created pathways with user pathways nested under each visa
-//   const systemChecklist = [
+// // Dummy data
+// const systemPathway = [
+//   { id: '1', title: 'နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၁)', Passport: '🇲🇲', flag: '🇳🇿', Pathway: 'Study', VisaType: 'Fee Paying Student Visa' },
+//   { id: '2', title: 'နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၂)', Passport: '🇲🇲', flag: '🇳🇿', Pathway: 'Study', VisaType: 'Dependent Child Student Visa' },
+//   { id: '3', title: 'နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၃)', Passport: '🇲🇲', flag: '🇳🇿', Pathway: 'Study', VisaType: 'Pathway Student Visa' },
+//   { id: '4', title: 'နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၄)', Passport: '🇲🇲', flag: '🇸🇬', Pathway: 'Study', VisaType: 'Exchange Student Visa' },
+//   { id: '5', title: 'နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၅)', Passport: '🇲🇲', flag: '🇸🇬', Pathway: 'Study', VisaType: 'Dependent Student Visa' },
+// ];
+
+// const userPathway = [
+//   { id: '3', title: 'စင်ကာပူကို ကျောင်းသွားတက်မယ် (၁)', Passport: '🇲🇲', flag: '🇸🇬', Pathway: 'Study', VisaType: 'Fee Paying Student Visa' },
+//   { id: '4', title: 'စင်ကာပူကို ကျောင်းသွားတက်မယ် (၂)', Passport: '🇲🇲', flag: '🇸🇬', Pathway: 'Study', VisaType: 'Exchange Student Visa' },
+// ];
+
+// const PathwayPlanScreen = () => {
+//   // Grouping data by country flag
+//   const groupedData = [
 //     {
-//       id: '1',
-//       title: 'New Zealand',
-//       subPathways: [
-//         {
-//           title: 'Study',
-//           visas: [
-//             {
-//               title: 'Fee Paying Student Visa',
-//               userPathways: ['နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၁)'],
-//             },
-//             {
-//               title: 'Dependent Child Student Visa',
-//               userPathways: ['နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၂)'],
-//             },
-//             {
-//               title: 'Pathway Student Visa',
-//               userPathways: ['နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၃)'],
-//             },
-//             {
-//               title: 'Exchange Student Visa',
-//               userPathways: ['နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၄)'],
-//             },
-//             {
-//               title: 'Dependent Student Visa',
-//               userPathways: ['နယူးဇီလန်ကို ကျောင်းသွားတက်မယ် (၅)'],
-//             },
-//           ],
-//         },
-//         {
-//           title: 'Work',
-//           visas: [],
-//         },
-//         {
-//           title: 'Visit',
-//           visas: [],
-//         },
-//       ],
+//       title: 'New Zealand 🇳🇿',
+//       data: systemPathway.filter(item => item.flag === '🇳🇿'),
+//     },
+//     {
+//       title: 'Singapore 🇸🇬',
+//       data: userPathway.filter(item => item.flag === '🇸🇬'),
 //     },
 //   ];
 
-//   // User-created pathways
-//   const myChecklist = [
-//     {
-//       id: '1',
-//       title: 'စင်ကာပူကို ကျောင်းသွားတက်မယ် (၁)',
-//     },
-//     {
-//       id: '2',
-//       title: 'စင်ကာပူကို ကျောင်းသွားတက်မယ် (၂)',
-//     },
-//   ];
-
-//   // State to manage toggles
-//   const [expandedItems, setExpandedItems] = useState({});
-
-//   // Function to handle toggle
-//   const toggleExpand = (id) => {
-//     setExpandedItems((prev) => ({
-//       ...prev,
-//       [id]: !prev[id],
-//     }));
-//   };
-
-//   const handlePress = (item) => {
-//     navigation.navigate('EditCheckList', { item });
-//   };
+//   const renderItem = ({ item }) => (
+//     <View style={styles.card}>
+//       <Text style={styles.title}>{item.title}</Text>
+//       <Text style={styles.buttonTitleSmallText}>Passport: {item.Passport}</Text>
+//       <Text style={styles.buttonTitleSmallText}>Pathway: {item.Pathway}</Text>
+//       <Text style={styles.buttonTitleSmallText}>Visa Type: {item.VisaType}</Text>
+//       <Text style={styles.buttonTitleSmallText}>Destination: {item.flag}</Text>
+//     </View>
+//   );
 
 //   return (
 //     <View style={styles.container}>
-//       <ScrollView>
-//         {/* System-created pathways */}
-//         <View style={styles.section}>
-//           <Text style={styles.sectionTitle}>System created pathways</Text>
-//           {systemChecklist.map((country) => (
-//             <View key={country.id} style={styles.countrySection}>
-//               <TouchableOpacity onPress={() => toggleExpand(country.id)}>
-//                 <Text style={styles.countryTitle}>
-//                   {country.title} {expandedItems[country.id] ? '▲' : '▼'}
-//                 </Text>
-//               </TouchableOpacity>
-//               {expandedItems[country.id] && (
-//                 <View>
-//                   {country.subPathways.map((subPathway, index) => (
-//                     <View key={index} style={styles.subPathwaySection}>
-//                       <TouchableOpacity onPress={() => toggleExpand(`${country.id}-${index}`)}>
-//                         <Text style={styles.subPathwayTitle}>
-//                           {subPathway.title} {expandedItems[`${country.id}-${index}`] ? '▲' : '▼'}
-//                         </Text>
-//                       </TouchableOpacity>
-//                       {expandedItems[`${country.id}-${index}`] && (
-//                         <View>
-//                           {subPathway.visas.map((visa, visaIdx) => (
-//                             <View key={visaIdx} style={styles.visaSection}>
-//                               <TouchableOpacity onPress={() => toggleExpand(`${country.id}-${index}-${visaIdx}`)}>
-//                                 <Text style={styles.visaTitle}>
-//                                   {visa.title} {expandedItems[`${country.id}-${index}-${visaIdx}`] ? '▲' : '▼'}
-//                                 </Text>
-//                               </TouchableOpacity>
-//                               {expandedItems[`${country.id}-${index}-${visaIdx}`] && (
-//                                 <View>
-//                                   {visa.userPathways.map((userPathway, userIdx) => (
-//                                     <Text key={userIdx} style={styles.userPathway}>
-//                                        {userPathway}
-//                                     </Text>
-//                                   ))}
-//                                 </View>
-//                               )}
-//                             </View>
-//                           ))}
-//                         </View>
-//                       )}
-//                     </View>
-//                   ))}
-//                 </View>
-//               )}
-//             </View>
-//           ))}
-//         </View>
-
-//         {/* User-created pathways */}
-//         <View style={styles.section}>
-//           <Text style={styles.sectionTitle}>User created pathways</Text>
-//           {myChecklist.map((item) => (
-//             <TouchableOpacity key={item.id} style={styles.checklistItem} onPress={() => handlePress(item)}>
-//               <Text style={styles.buttonTitleBigText}>{item.title}</Text>
-//             </TouchableOpacity>
-//           ))}
-//         </View>
-//       </ScrollView>
+//       <Text style={styles.header}>Pathway Plans</Text>
+//       <SectionList
+//         sections={groupedData}
+//         keyExtractor={(item) => item.id}
+//         renderItem={renderItem}
+//         renderSectionHeader={({ section }) => (
+//           <View style={styles.sectionHeader}>
+//             <Text style={styles.sectionTitle}>{section.title}</Text>
+//           </View>
+//         )}
+//       />
 //     </View>
 //   );
 // };
@@ -142,60 +59,39 @@
 //   container: {
 //     flex: 1,
 //     padding: 20,
-//     backgroundColor: '#f0f4f7',
+//     backgroundColor: '#f8f8f8',
 //   },
-//   section: {
-//     marginBottom: 25,
-//   },
-//   sectionTitle: {
+//   header: {
 //     fontSize: 24,
 //     fontWeight: 'bold',
-//     color: '#333',
-//     marginBottom: 10,
-//   },
-//   countrySection: {
 //     marginBottom: 20,
+//     textAlign: 'center',
 //   },
-//   countryTitle: {
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     color: '#555',
+//   sectionHeader: {
+//     backgroundColor: '#f0f0f0',
+//     padding: 10,
 //     marginBottom: 10,
 //   },
-//   subPathwaySection: {
-//     marginLeft: 20,
-//     marginBottom: 15,
-//   },
-//   subPathwayTitle: {
+//   sectionTitle: {
 //     fontSize: 18,
 //     fontWeight: '600',
-//     color: '#777',
-//     marginBottom: 5,
+//     color: '#333',
 //   },
-//   visaSection: {
-//     marginLeft: 40,
-//     marginBottom: 10,
-//   },
-//   visaTitle: {
-//     fontSize: 16,
-//     color: '#888',
-//   },
-//   userPathway: {
-//     marginLeft: 60,
-//     fontSize: 16,
-//     color: '#999',
-//   },
-//   checklistItem: {
+//   card: {
 //     backgroundColor: '#fff',
 //     padding: 15,
-//     borderRadius: 10,
 //     marginBottom: 10,
+//     borderRadius: 8,
 //     elevation: 3,
 //   },
-//   buttonTitleBigText: {
-//     fontSize: 20,
+//   title: {
+//     fontSize: 16,
 //     fontWeight: '600',
-//     color: '#333',
+//     marginBottom: 5,
+//   },
+//   visaType: {
+//     fontSize: 14,
+//     color: '#555',
 //   },
 // });
 
